@@ -33,24 +33,24 @@ Gemini-Guided-Quiz-Coach solves this by:
 ---
 
 ## 🧠 Key Features
-- 📘 Paste study notes and auto-generate questions
-- 📝 Answer any question interactively
-- 📊 Get AI-powered evaluation and feedback
-- 🧠 Context-aware reasoning using Gemini
-- ⚡ Free-tier optimized with minimal API calls
+- 📘 Paste study notes and auto-generate questions  
+- 📝 Answer any question interactively  
+- 📊 Get AI-powered evaluation and feedback  
+- 🧠 Context-aware reasoning using Gemini  
+- ⚡ Free-tier optimized with minimal API calls  
 
 ---
 
 ## 🛠️ Tech Stack
-- **Backend:** Node.js, Express
-- **Frontend:** HTML, CSS, JavaScript
-- **AI Model:** Google Gemini API (`gemini-2.5-flash`)
-- **Caching:** In-memory caching to reduce API usage
+- **Backend:** Node.js, Express  
+- **Frontend:** HTML, CSS, JavaScript  
+- **AI Model:** Google Gemini API (`gemini-2.5-flash`)  
+- **Caching:** In-memory caching to reduce API usage  
 
 ---
 
 ## 🧩 Architecture
-Frontend (HTML/JS)
+Frontend (HTML / JavaScript)
 ↓
 Express Backend (Node.js)
 ↓
@@ -115,6 +115,10 @@ Robust JSON extraction ensures reliability even with verbose LLM responses
 Uses gemini-2.5-flash for higher request limits
 
 Only 2 Gemini API calls per learning session
+
+One for question generation
+
+One for answer evaluation
 
 In-memory caching avoids repeated calls for the same content
 
