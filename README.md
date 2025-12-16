@@ -78,6 +78,8 @@ Generates 5 challenging questions from the provided study material.
     }
   ]
 }
+
+```
 2️⃣ Evaluate Answer Endpoint
 ---------------------------
 
