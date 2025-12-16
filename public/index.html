@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dynamic Learning Summary Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 14px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1e40af;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .question-item {
+      cursor: pointer;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .question-item:hover {
+      background: #f0f0f0;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e5e7eb;
+      color: #333;
+      padding: 2px 6px;
+      margin-left: 5px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: bold;
+      color: #16a34a;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>📘 Dynamic Learning Summary Tool</h1>
+
+    <!-- SECTION 1: Upload Notes -->
+    <div class="card">
+      <h2>1️⃣ Paste Your Study Notes</h2>
+      <textarea id="notesInput" placeholder="Paste your lecture notes or textbook text here..."></textarea>
+      <br />
+      <button onclick="generateQuestions()">Generate 5 Questions</button>
+    </div>
+
+    <!-- SECTION 2: Questions -->
+    <div class="card hidden" id="questionsSection">
+      <h2>2️⃣ Generated Questions</h2>
+      <div id="questionsList"></div>
+    </div>
+
+    <!-- SECTION 3: Answer & Feedback -->
+    <div class="card hidden" id="answerSection">
+      <h2>3️⃣ Answer the Question</h2>
+
+      <p id="selectedQuestion"></p>
+
+      <textarea id="answerInput" placeholder="Write your answer here..."></textarea>
+      <br />
+      <button onclick="evaluateAnswer()">Evaluate My Answer</button>
+
+      <div id="feedbackSection" class="hidden">
+        <h2>📊 Feedback</h2>
+        <p class="score" id="scoreText"></p>
+
+        <h4>✅ Strengths</h4>
+        <ul id="strengthsList"></ul>
+
+        <h4>⚠️ Areas to Improve</h4>
+        <ul id="improveList"></ul>
+
+        <h4>➡️ Next Step</h4>
+        <p id="nextStepText"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let studyText = "";
+    let questions = [];
+    let currentQuestion = "";
+
+    async function generateQuestions() {
+      studyText = document.getElementById("notesInput").value.trim();
+
+      if (studyText.length < 50) {
+        alert("Please enter at least 50 characters of study material.");
+        return;
+      }
+
+      const res = await fetch("/generate-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: studyText })
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+
+      questions = data.questions;
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const list = document.getElementById("questionsList");
+      list.innerHTML = "";
+
+      questions.forEach(q => {
+        const div = document.createElement("div");
+        div.className = "question-item";
+        div.innerHTML = `
+          <strong>Q${q.id}:</strong> ${q.question}
+          <span class="tag">${q.difficulty}</span>
+          <span class="tag">${q.skill}</span>
+        `;
+        div.onclick = () => selectQuestion(q.question);
+        list.appendChild(div);
+      });
+
+      document.getElementById("questionsSection").classList.remove("hidden");
+    }
+
+    function selectQuestion(questionText) {
+      currentQuestion = questionText;
+      document.getElementById("selectedQuestion").innerText = questionText;
+      document.getElementById("answerSection").classList.remove("hidden");
+      document.getElementById("feedbackSection").classList.add("hidden");
+      document.getElementById("answerInput").value = "";
+    }
+
+    async function evaluateAnswer() {
+      const answer = document.getElementById("answerInput").value.trim();
+
+      if (!answer) {
+        alert("Please write an answer.");
+        return;
+      }
+
+      const res = await fetch("/evaluate-answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: currentQuestion,
+          answer: answer,
+          contextText: studyText
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+
+      showFeedback(data);
+    }
+
+    function showFeedback(data) {
+      document.getElementById("scoreText").innerText =
+        `Score: ${data.score} / ${data.outOf}`;
+
+      const strengths = document.getElementById("strengthsList");
+      strengths.innerHTML = "";
+      data.strengths.forEach(s => {
+        const li = document.createElement("li");
+        li.innerText = s;
+        strengths.appendChild(li);
+      });
+
+      const improve = document.getElementById("improveList");
+      improve.innerHTML = "";
+      data.areasToImprove.forEach(i => {
+        const li = document.createElement("li");
+        li.innerText = i;
+        improve.appendChild(li);
+      });
+
+      document.getElementById("nextStepText").innerText =
+        data.nextStepSuggestion;
+
+      document.getElementById("feedbackSection").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
