@@ -61,6 +61,9 @@ Copy code
 
 ---
 
+
+---
+
 ## 🔗 Gemini API Integration
 
 ### 1️⃣ Generate Questions Endpoint
@@ -81,16 +84,15 @@ Generates 5 challenging questions from study material.
     }
   ]
 }
+
 2️⃣ Evaluate Answer Endpoint
+
 POST /evaluate-answer
 
 Purpose:
 Evaluates a student’s answer using full contextual understanding.
 
 JSON Output Schema:
-
-json
-Copy code
 {
   "score": 0,
   "outOf": 10,
@@ -98,7 +100,9 @@ Copy code
   "areasToImprove": ["string"],
   "nextStepSuggestion": "string"
 }
+
 🧪 Prompt Engineering Strategy
+
 Strict system instructions to return only valid JSON
 
 Context passed includes:
@@ -112,6 +116,7 @@ Student’s answer
 Robust JSON extraction ensures reliability even with verbose LLM responses
 
 ⚡ Free-Tier Optimization
+
 Uses gemini-2.5-flash for higher request limits
 
 Only 2 Gemini API calls per learning session
