@@ -56,12 +56,6 @@ Express Backend (Node.js)
 ↓
 Google Gemini API (gemini-2.5-flash)
 
-yaml
-Copy code
-
----
-
-
 ---
 
 ## 🔗 Gemini API Integration
@@ -70,7 +64,7 @@ Copy code
 **POST** `/generate-questions`
 
 **Purpose:**  
-Generates 5 challenging questions from study material.
+Generates 5 challenging questions from the provided study material.
 
 **JSON Output Schema:**
 ```json
@@ -84,15 +78,16 @@ Generates 5 challenging questions from study material.
     }
   ]
 }
-
 2️⃣ Evaluate Answer Endpoint
-
 POST /evaluate-answer
 
 Purpose:
 Evaluates a student’s answer using full contextual understanding.
 
 JSON Output Schema:
+
+json
+Copy code
 {
   "score": 0,
   "outOf": 10,
@@ -100,10 +95,8 @@ JSON Output Schema:
   "areasToImprove": ["string"],
   "nextStepSuggestion": "string"
 }
-
 🧪 Prompt Engineering Strategy
-
-Strict system instructions to return only valid JSON
+Strict system instructions enforce JSON-only responses
 
 Context passed includes:
 
@@ -116,10 +109,9 @@ Student’s answer
 Robust JSON extraction ensures reliability even with verbose LLM responses
 
 ⚡ Free-Tier Optimization
+Uses gemini-2.5-flash for higher free-tier limits
 
-Uses gemini-2.5-flash for higher request limits
-
-Only 2 Gemini API calls per learning session
+Only 2 Gemini API calls per learning session:
 
 One for question generation
 
@@ -143,7 +135,7 @@ Create a .env file in the root directory:
 ini
 Copy code
 GEMINI_API_KEY=your_actual_api_key_here
-⚠️ Do not commit .env to GitHub.
+⚠️ Do NOT commit .env to GitHub.
 
 4️⃣ Start the Application
 bash
