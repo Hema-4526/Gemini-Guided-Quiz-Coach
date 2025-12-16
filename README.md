@@ -79,15 +79,16 @@ Generates 5 challenging questions from the provided study material.
   ]
 }
 2️⃣ Evaluate Answer Endpoint
-POST /evaluate-answer
+---------------------------
 
-Purpose:
-Evaluates a student’s answer using full contextual understanding.
+**POST** `/evaluate-answer`
 
-JSON Output Schema:
+**Purpose:**  
+Evaluates a student's answer using full contextual understanding.
 
-json
-Copy code
+**JSON Output Schema:**
+
+```json
 {
   "score": 0,
   "outOf": 10,
@@ -95,74 +96,89 @@ Copy code
   "areasToImprove": ["string"],
   "nextStepSuggestion": "string"
 }
+```
+
 🧪 Prompt Engineering Strategy
-Strict system instructions enforce JSON-only responses
+------------------------------
+
+Strict system instructions enforce JSON-only responses.
 
 Context passed includes:
 
-Full study material
+- Full study material  
+- Selected question  
+- Student's answer  
 
-Selected question
-
-Student’s answer
-
-Robust JSON extraction ensures reliability even with verbose LLM responses
+Robust JSON extraction ensures reliability even with verbose LLM responses.
 
 ⚡ Free-Tier Optimization
-Uses gemini-2.5-flash for higher free-tier limits
+-------------------------
+
+Uses `gemini-2.5-flash` for higher free-tier limits.
 
 Only 2 Gemini API calls per learning session:
 
-One for question generation
+- One for question generation  
+- One for answer evaluation  
 
-One for answer evaluation
+In-memory caching avoids repeated calls for the same content.
 
-In-memory caching avoids repeated calls for the same content
+🧐‍💻 Setup Instructions
+-----------------------
 
-🧑‍💻 Setup Instructions
-1️⃣ Clone the Repository
-bash
-Copy code
+1️⃣ **Clone the Repository**
+
+```bash
 git clone https://github.com/Hema-4526/Gemini-Guided-Quiz-Coach.git
 cd Gemini-Guided-Quiz-Coach
-2️⃣ Install Dependencies
-bash
-Copy code
+```
+
+2️⃣ **Install Dependencies**
+
+```bash
 npm install
-3️⃣ Create Environment File
-Create a .env file in the root directory:
+```
 
-ini
-Copy code
+3️⃣ **Create Environment File**
+
+Create a `.env` file in the root directory:
+
+```ini
 GEMINI_API_KEY=your_actual_api_key_here
-⚠️ Do NOT commit .env to GitHub.
+```
 
-4️⃣ Start the Application
-bash
-Copy code
+⚠️ Do NOT commit `.env` to GitHub.
+
+4️⃣ **Start the Application**
+
+```bash
 node server.js
-5️⃣ Open in Browser
-arduino
-Copy code
+```
+
+5️⃣ **Open in Browser**
+
+```
 http://localhost:3000
+```
+
 🎓 Use Case Example
-Paste lecture notes on recursion
+-------------------
 
-Generate 5 conceptual questions
-
-Answer one question
-
-Receive detailed feedback with improvement suggestions
+- Paste lecture notes on recursion  
+- Generate 5 conceptual questions  
+- Answer one question  
+- Receive detailed feedback with improvement suggestions  
 
 📈 Future Enhancements
-Multi-question evaluation per session
+----------------------
 
-Learning progress tracking
-
-Topic-wise recommendations
-
-User authentication and dashboards
+- Multi-question evaluation per session  
+- Learning progress tracking  
+- Topic-wise recommendations  
+- User authentication and dashboards  
 
 🏁 Conclusion
-Gemini-Guided-Quiz-Coach demonstrates how Gemini’s reasoning and context management can power personalized education tools with minimal API usage.
+-------------
+
+Gemini-Guided-Quiz-Coach demonstrates how Gemini's reasoning and context management can power personalized education tools with minimal API usage.  
 It transforms passive reading into active, feedback-driven learning.
